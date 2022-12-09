@@ -49,19 +49,21 @@ public class MainController {
 		
 //		List<Question> questions = questionRepository.findAll();
 		
-		List<Question> questions= questionService.getQuestionList();
+		List<QuestionDto> questions= questionService.getQuestionList();
 		
 		model.addAttribute("qList", questions);
 		
 		return "question_list";
 	}
 	
-	@RequestMapping(value = "/questionView/{id}")
+	@RequestMapping(value = "/question_view/{id}")
 	public String questionView(@PathVariable("id") Integer id, Model model) {
 		
-		questionService.getQuestion(id);
+		Question question = questionService.getQuestion(id);
 		
-		return "questionView";
+		model.addAttribute("question", question);
+		
+		return "question_view";
 	}
 	
 }

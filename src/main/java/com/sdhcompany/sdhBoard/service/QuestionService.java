@@ -1,5 +1,7 @@
 package com.sdhcompany.sdhBoard.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,27 +23,26 @@ public class QuestionService {
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
 	
-	public List<Question> getQuestionList() {
+	public List<QuestionDto> getQuestionList() {
 		
 		List<Question> questions = questionRepository.findAll();
 		
-//		List<QuestionDto> questionDtos = null;
-//		
-//		QuestionDto questionDto = new QuestionDto();
-//		questionDto = null;
-//		
-//		for(int i=0; i<questions.size(); i++) {
-//
-//			Question question = questions.get(i);
-//			
-//			questionDto.setId(question.getId());
-//			questionDto.setContent(question.getContent());
-//			questionDto.setSubject(question.getSubject());
-//			//questionDto.setAnswerList(question.getAnswerList());
-//			
-//			questionDtos.add(questionDto);
-//		}
-		return questions;
+		List<QuestionDto> questionDtos = new ArrayList<QuestionDto>();
+		
+		for(int i=0; i<questions.size(); i++) {
+
+			Question question = questions.get(i);
+			QuestionDto questionDto = new QuestionDto();
+			
+			questionDto.setId(question.getId());
+			questionDto.setContent(question.getContent());
+			questionDto.setSubject(question.getSubject());
+			questionDto.setAnswerList(question.getAnswerList());
+			questionDto.setCreateDate(question.getCreateDate());
+			
+			questionDtos.add(questionDto);
+		}
+		return questionDtos;
 	}
 	
 	public Question getQuestion(Integer id) {
