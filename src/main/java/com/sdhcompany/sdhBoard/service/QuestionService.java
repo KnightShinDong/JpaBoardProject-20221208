@@ -57,4 +57,14 @@ public class QuestionService {
 		}
 	}
 
+	public void questionCreate(String subject, String content) {
+		
+		Question question = new Question();
+		question.setSubject(subject);
+		question.setContent(content);
+		
+		questionRepository.save(question);
+		
+		
+	}
 }
