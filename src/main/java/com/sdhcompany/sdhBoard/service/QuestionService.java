@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.context.config.ConfigDataLocationNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sdhcompany.sdhBoard.dto.QuestionDto;
@@ -23,9 +26,20 @@ public class QuestionService {
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
 	
+	public Page<Question> getList(int page){
+		
+		Pageable pageable = PageRequest.of(page, 10); //페이지당 표시되는 글 개수
+		
+		Page<Question> pages = questionRepository.findAll(pageable);
+		
+		return pages;
+	}
+	
 	public List<QuestionDto> getQuestionList() {
 		
+				
 		List<Question> questions = questionRepository.findAll();
+		
 		
 		List<QuestionDto> questionDtos = new ArrayList<QuestionDto>();
 		

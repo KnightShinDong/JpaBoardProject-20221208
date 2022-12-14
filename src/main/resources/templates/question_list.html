@@ -27,7 +27,7 @@
    			<th>등록일</th>
    		</tr>
    		</thead>
-   		<tr th:each="question:${qList}">
+   		<tr th:each="question:${paging}">
    			<td th:text="${question.id}"></td>
    			<td>
    				<a th:href="@{|/questionView/${question.id}|}" th:text="${question.subject}"></a>
@@ -35,6 +35,21 @@
    			<td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
    		</tr>
    </table>
+   <!-- 페이징 시작 -->
+   	<div th:if="${!paging.isEmpty()}">
+   		<ul>
+   			<li th:classappend="${!paging.hasPrevious} ? 'disabled'">
+   				<span><a href="">이전</a></span>
+   			</li>
+   			<li>
+   				
+   			</li>
+   			<li th:classappend="${!paging.hasNext} ? 'disabled'">
+   				<span><a href="">다음</a></span>
+   			</li>
+   		</ul>
+   	</div>
+   <!-- 페이징 끝 -->
    <a th:href = "@{/question_form}" class= "btn btn-primary my-2">질문등록</a>
    
    </div>
