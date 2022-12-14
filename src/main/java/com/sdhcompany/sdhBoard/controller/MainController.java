@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sdhcompany.sdhBoard.dto.AnswerForm;
 import com.sdhcompany.sdhBoard.dto.QuestionDto;
 import com.sdhcompany.sdhBoard.dto.QuestionForm;
 import com.sdhcompany.sdhBoard.entity.Answer;
@@ -68,7 +69,7 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/questionView/{id}")
-	public String questionView(@PathVariable("id") Integer id, Model model) {
+	public String questionView(@PathVariable("id") Integer id, Model model,AnswerForm answerForm) {
 		
 		Question question = questionService.getQuestion(id);
 		
@@ -77,12 +78,17 @@ public class MainController {
 		return "question_view";
 	}
 	
-	@RequestMapping(value = "/answerCreate/{id}")
-	public String answerCreate(@PathVariable("id") Integer id,@RequestParam String content) {
-								//{id}							//<textarea rows="10" cols="60" name="content">
+	@PostMapping(value = "/answerCreate/{id}")
+	public String answerCreate(Model model,@PathVariable("id") Integer id,@Validated AnswerForm answerForm, BindingResult bindingResult) { 
+								//{id}							@RequestParam String content//<textarea rows="10" cols="60" name="content">
 		
-		answerService.answerCreate(content, id);
+		Question question= questionService.getQuestion(id);
 		
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("question", question);
+			return "question_view";
+		}
+		answerService.answerCreate(answerForm.getContent(), id);
 		return String.format("redirect:/questionView/%s", id);
 	}
 	
