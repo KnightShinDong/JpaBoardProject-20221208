@@ -9,12 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sdhcompany.sdhBoard.dto.QuestionDto;
+import com.sdhcompany.sdhBoard.dto.QuestionForm;
 import com.sdhcompany.sdhBoard.entity.Answer;
 import com.sdhcompany.sdhBoard.entity.Question;
 import com.sdhcompany.sdhBoard.repository.AnswerRepository;
@@ -82,14 +87,20 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/question_form")
-	public String questionCreate() {
+	public String questionCreate(QuestionForm questionForm) {
+		
 		
 		return "question_form";
 	}
-	@RequestMapping(value = "/questionCreate")
-	public String questionCreate(@RequestParam String content,@RequestParam String subject) {
+	@PostMapping(value = "/questionCreate")
+	public String questionCreate(@Validated QuestionForm questionForm, BindingResult bindingResult) {
+								//퀘스트폼안에 있는 변수값을 사용할때 벨리데이션 사용, 에러값이오면 bindingResult에전달 
 		
-		questionService.questionCreate(subject, content);
+		if(bindingResult.hasErrors()) {
+			return "question_form";
+		}
+		
+		questionService.questionCreate(questionForm.getSubject(), questionForm.getContent());
 		
 		return "redirect:list";
 	}
