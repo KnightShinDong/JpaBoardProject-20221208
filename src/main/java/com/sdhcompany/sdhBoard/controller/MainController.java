@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sdhcompany.sdhBoard.dto.AnswerForm;
+import com.sdhcompany.sdhBoard.dto.MemberForm;
 import com.sdhcompany.sdhBoard.dto.QuestionDto;
 import com.sdhcompany.sdhBoard.dto.QuestionForm;
 import com.sdhcompany.sdhBoard.entity.Answer;
@@ -27,6 +28,7 @@ import com.sdhcompany.sdhBoard.entity.Question;
 import com.sdhcompany.sdhBoard.repository.AnswerRepository;
 import com.sdhcompany.sdhBoard.repository.QuestionRepository;
 import com.sdhcompany.sdhBoard.service.AnswerService;
+import com.sdhcompany.sdhBoard.service.MemberService;
 import com.sdhcompany.sdhBoard.service.QuestionService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,7 @@ public class MainController {
 	
 	private final QuestionService questionService;
 	private final AnswerService answerService;
+	private final MemberService memberService;
 	
 	@RequestMapping(value = "/")
 	public String home() {
@@ -113,5 +116,28 @@ public class MainController {
 		
 		return "redirect:list";
 	}
-	
+	@RequestMapping(value = "/join")
+	public String join(MemberForm memberForm) {
+		
+		
+		return "join_form";
+	}
+	@PostMapping(value = "/joinOk")
+	public String joinOk(@Validated MemberForm memberForm, BindingResult bindingResult) {
+								//퀘스트폼안에 있는 변수값을 사용할때 벨리데이션 사용, 에러값이오면 bindingResult에전달 
+		
+		if(bindingResult.hasErrors()) {
+			return "join_form";
+		}
+		
+		try {
+		
+			memberService.memberCreate(memberForm.getUsername(), memberForm.getPassword(), memberForm.getEmail());
+		}catch(Exception e){
+			e.printStackTrace();
+			bindingResult.reject("joinFail","이미 등록된 아이디입니다.");
+			return "join_form";
+		}
+		return "redirect:list";
+	}
 }
