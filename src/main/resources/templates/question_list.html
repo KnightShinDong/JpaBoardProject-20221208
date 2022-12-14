@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www/ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{/layout}">
 <head>
 <meta charset="UTF-8">
 <title>질문/답변 게시판</title>
@@ -8,11 +10,15 @@
 
 </head>
 <body>
-	<div>
-		<h2 align="center" >질문 답변 게시판</h2>
-	</div>
+	<nav class="navbar bg-light">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="/index">SDH Q&A BOARD</a>
+	  	&nbsp;&nbsp;<a href="#">로그인</a>
+	  </div>
+		
+	</nav>
 
-   <div class="container my-3">
+   <div layout:fragment="content" class="container my-3">
    <table class="table">
    		<thead class="table-dark">
    		<tr>

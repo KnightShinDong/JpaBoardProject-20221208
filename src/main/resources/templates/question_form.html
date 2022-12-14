@@ -6,6 +6,11 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
+	<nav class="navbar bg-light">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="/index">SDH Q&A BOARD</a>
+	  	&nbsp;&nbsp;<a href="#">로그인</a>
+	  </div>
    <div class="container">
    	<h5 class="my-3 border-bottom pb-2">질문하기</h5>
    		<form th:action="@{/question_list}" method="post" th:object="${questionForm}">
