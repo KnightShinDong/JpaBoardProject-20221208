@@ -63,7 +63,8 @@ public class MainController {
 //		List<Question> questions = questionRepository.findAll();
 		
 //		List<QuestionDto> questions= questionService.getQuestionList();
-	
+		
+		
 		Page<Question> paging= questionService.getList(page);
 		model.addAttribute("paging", paging);
 		

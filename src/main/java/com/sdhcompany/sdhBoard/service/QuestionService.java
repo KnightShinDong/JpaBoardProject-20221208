@@ -9,6 +9,7 @@ import org.springframework.boot.context.config.ConfigDataLocationNotFoundExcepti
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.sdhcompany.sdhBoard.dto.QuestionDto;
@@ -28,7 +29,11 @@ public class QuestionService {
 	
 	public Page<Question> getList(int page){
 		
-		Pageable pageable = PageRequest.of(page, 10); //페이지당 표시되는 글 개수
+		List<Sort.Order> sort = new ArrayList<>();
+		
+		sort.add(Sort.Order.desc("id"));
+		
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(sort)); //페이지당 표시되는 글 개수
 		
 		Page<Question> pages = questionRepository.findAll(pageable);
 		
