@@ -2,6 +2,9 @@ package com.sdhcompany.sdhBoard.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration //환경설정 파일임을 알림
 @EnableWebSecurity //모든 웹에 대한 요청이 스프링 시큐리티의 컨트롤 하에 있을을 알림
+@EnableMethodSecurity(prePostEnabled = true) //@PreAuthorize 애너테이션이 동작하도록함
 public class SecurityConfig {
 
 	@Bean
@@ -29,7 +33,12 @@ public class SecurityConfig {
 			.and()
 				.formLogin()
 				.loginPage("/login")//로그인 페이지가 보이게 하는 요청
-				.defaultSuccessUrl("/index"); //로그인 성공시 이동할 요청
+				.defaultSuccessUrl("/index") //로그인 성공시 이동할 요청
+			.and()//로그아웃
+				.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))//로그아웃요청
+				.logoutSuccessUrl("/index")//로그아웃 성공시 이동할 요청
+				.invalidateHttpSession(true); //세션삭제 로그아웃
 		return http.build();
 	}
 	
@@ -38,4 +47,9 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 	
+	@Bean
+	   AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+	      return authenticationConfiguration.getAuthenticationManager();
+	   }
+
 }

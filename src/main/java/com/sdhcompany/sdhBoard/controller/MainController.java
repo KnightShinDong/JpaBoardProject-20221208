@@ -1,12 +1,14 @@
 package com.sdhcompany.sdhBoard.controller;
 
 import java.net.http.HttpRequest;
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -84,35 +86,44 @@ public class MainController {
 		return "question_view";
 	}
 	
+	@PreAuthorize("isAuthenticated")
 	@PostMapping(value = "/answerCreate/{id}")
-	public String answerCreate(Model model,@PathVariable("id") Integer id,@Validated AnswerForm answerForm, BindingResult bindingResult) { 
+	public String answerCreate(Model model,@PathVariable("id") Integer id,
+			@Validated AnswerForm answerForm, BindingResult bindingResult, Principal principal) { 
 								//{id}							@RequestParam String content//<textarea rows="10" cols="60" name="content">
 		
 		Question question= questionService.getQuestion(id);
+		
+	
+		
+		
 		
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("question", question);
 			return "question_view";
 		}
-		answerService.answerCreate(answerForm.getContent(), id);
+		answerService.answerCreate(answerForm.getContent(), id, principal.getName());
 		return String.format("redirect:/questionView/%s", id);
 	}
 	
+	@PreAuthorize("isAuthenticated")
 	@RequestMapping(value = "/question_form")
 	public String questionCreate(QuestionForm questionForm) {
 		
 		
 		return "question_form";
 	}
+	
+	@PreAuthorize("isAuthenticated")
 	@PostMapping(value = "/questionCreate")
-	public String questionCreate(@Validated QuestionForm questionForm, BindingResult bindingResult) {
+	public String questionCreate(@Validated QuestionForm questionForm, BindingResult bindingResult,Principal principal) {
 								//퀘스트폼안에 있는 변수값을 사용할때 벨리데이션 사용, 에러값이오면 bindingResult에전달 
 		
 		if(bindingResult.hasErrors()) {
 			return "question_form";
 		}
 		
-		questionService.questionCreate(questionForm.getSubject(), questionForm.getContent());
+		questionService.questionCreate(questionForm.getSubject(), questionForm.getContent(),principal.getName());
 		
 		return "redirect:list";
 	}

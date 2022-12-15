@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.sdhcompany.sdhBoard.dto.QuestionDto;
 import com.sdhcompany.sdhBoard.entity.Question;
+import com.sdhcompany.sdhBoard.entity.SiteMember;
 import com.sdhcompany.sdhBoard.exception.DataNotFoundException;
 import com.sdhcompany.sdhBoard.repository.AnswerRepository;
 import com.sdhcompany.sdhBoard.repository.QuestionRepository;
@@ -26,6 +27,7 @@ public class QuestionService {
 
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
+	private final MemberService memberService;
 	
 	public Page<Question> getList(int page){
 		
@@ -76,12 +78,16 @@ public class QuestionService {
 		}
 	}
 
-	public void questionCreate(String subject, String content) {
+	public void questionCreate(String subject, String content,String username) {
+		
+		SiteMember siteMember = memberService.getMemberInfo(username);
 		
 		Question question = new Question();
+		
 		question.setSubject(subject);
 		question.setContent(content);
 		question.setCreateDate(LocalDateTime.now());
+		question.setWriter(siteMember);
 		questionRepository.save(question);
 		
 		
